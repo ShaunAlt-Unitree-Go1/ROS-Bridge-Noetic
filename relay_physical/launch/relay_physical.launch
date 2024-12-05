@@ -1,13 +1,13 @@
 <launch>
-    <node pkg="topic_tools" type="relay" name="relay_map" output="screen"/>
+    <node pkg="topic_tools" type="relay" name="relay_map" output="screen">
         <param name="input" value="/slamware_ros_sdk_server_node/map" />
         <param name="output" value="/map" />
     </node>
-    <node pkg="topic_tools" type="relay" name="relay_odom" output="screen"/>
+    <node pkg="topic_tools" type="relay" name="relay_odom" output="screen">
         <param name="input" value="/slamware_ros_sdk_server_node/odom" />
         <param name="output" value="/odom" />
     </node>
-    <node pkg="topic_tools" type="relay" name="relay_scan" output="screen"/>
+    <node pkg="topic_tools" type="relay" name="relay_scan" output="screen">
         <param name="input" value="/slamware_ros_sdk_server_node/scan" />
         <param name="output" value="/scan" />
     </node>
