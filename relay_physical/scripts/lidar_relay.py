@@ -16,6 +16,9 @@ into standardized ROS topics for SLAM and NAV.
 # Imports
 # =============================================================================
 
+# used for logging
+import logging
+
 # used for ros
 import rospy # type: ignore
 
@@ -47,6 +50,7 @@ class LidarRelay(object):
     - _callback_map(msg) : `None`
     - _callback_odom(msg) : `None`
     - _callback_scan(msg) : `None`
+    - log(msg, lvl=logging.INFO) : `None` << static >>
     - spin() : `None`
     '''
 
@@ -109,6 +113,10 @@ class LidarRelay(object):
             self._callback_scan
         )
 
+        # log node construction
+        self.log('Lidar Relay Node Constructed')
+
+
     # ========================================
     # Method - Subscriber Callback - Map Topic
     def _callback_map(self, msg: OccupancyGrid) -> None:
@@ -127,6 +135,7 @@ class LidarRelay(object):
         None
         '''
 
+        self.log('Relaying Map Data', logging.DEBUG)
         self._pub_map.publish(msg)
 
     # =========================================
@@ -147,6 +156,7 @@ class LidarRelay(object):
         None
         '''
 
+        self.log('Relaying Odom Data', logging.DEBUG)
         self._pub_odom.publish(msg)
 
     # =========================================
@@ -167,7 +177,43 @@ class LidarRelay(object):
         None
         '''
 
+        self.log('Relaying Scan Data', logging.DEBUG)
         self._pub_scan.publish(msg)
+
+    # ====================
+    # Method - Log Message
+    @staticmethod
+    def log(msg: str, lvl: int = logging.INFO) -> None:
+        '''
+        Log Message
+        -
+        Logs a message to the ROS console with a specified level.
+
+        Parameters
+        -
+        - msg : `str`
+            - Message to log.
+        - lvl : `int`
+            - Logging level to use. Defaults to `logging.INFO`.
+
+        Returns
+        -
+        None
+        '''
+
+        # re-format message to include node name
+        msg = f'{rospy.get_caller_id()}: {msg}'
+
+        if lvl == logging.DEBUG: rospy.logdebug(msg)
+        elif lvl == logging.INFO: rospy.loginfo(msg)
+        elif lvl == logging.WARNING: rospy.logwarn(msg)
+        elif lvl == logging.ERROR: rospy.logerr(msg)
+        elif lvl == logging.FATAL: rospy.logfatal(msg)
+        else:
+            raise ValueError(
+                f'LidarRelay.log(msg = {msg!r}, lvl = {lvl!r}) received ' \
+                + f'invalid lvl value {lvl!r}'
+            )
 
     # ==================
     # Method - Spin Node
