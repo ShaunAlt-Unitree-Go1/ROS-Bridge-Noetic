@@ -127,7 +127,7 @@ class TF_RePublisher(object):
         for tf in msg.transforms:
             if str(tf.header.stamp.secs).startswith('16'):
                 republish = True
-                msg.header.stamp = rospy.Time.now()
+                tf.header.stamp = rospy.Time.now()
         if republish:
             self._pub_tf.publish(msg)
 
@@ -157,7 +157,7 @@ class TF_RePublisher(object):
         for tf in msg.transforms:
             if str(tf.header.stamp.secs).startswith('16'):
                 republish = True
-                msg.header.stamp = rospy.Time.now()
+                tf.header.stamp = rospy.Time.now()
         if republish:
             self._pub_tf_static.publish(msg)
 
