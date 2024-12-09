@@ -120,7 +120,16 @@ class TF_RePublisher(object):
         '''
 
         self.log('Relaying TF Data', logging.DEBUG)
-        self._pub_tf.publish(msg)
+
+        # for some reason, some of the transforms are published at 1.6e9
+        # instead of 1.7e9, so this fixes the timestamp of the old messages
+        republish = False
+        for tf in msg.transforms:
+            if str(tf.header.stamp.secs).startswith('16'):
+                republish = True
+                msg.stamp = rospy.Time.now()
+        if republish:
+            self._pub_tf.publish(msg)
 
     # ==============================================
     # Method - Subscriber Callback - Static TF Topic
@@ -141,7 +150,16 @@ class TF_RePublisher(object):
         '''
 
         self.log('Relaying Static TF Data', logging.DEBUG)
-        self._pub_tf_static.publish(msg)
+
+        # for some reason, some of the transforms are published at 1.6e9
+        # instead of 1.7e9, so this fixes the timestamp of the old messages
+        republish = False
+        for tf in msg.transforms:
+            if str(tf.header.stamp.secs).startswith('16'):
+                republish = True
+                msg.stamp = rospy.Time.now()
+        if republish:
+            self._pub_tf_static.publish(msg)
 
     # ====================
     # Method - Log Message
